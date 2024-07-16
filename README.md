@@ -46,4 +46,4 @@ URL 发送 POST 请求，并返回响应 JSON。
 我们诚邀各位用户下载并使用 iFreeFlow 项目，并鼓励大家在自己的服务器上进行私有化部署。请勿对该项目进行商业付费，以免上当受骗。如果你觉得这个开源项目对你有很大帮助，请考虑通过 buy me a coffee 来赞助服务器的运维费用。谢谢！
 通过 iFreeFlow，我们希望能为广大 Power Automate 用户提供更便捷的服务，提升使用体验，欢迎大家的参与和支持！
 
-![最简单演示](buymeacoofe.png)
+![赞助](buymeacoffe.png)
