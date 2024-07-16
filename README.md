@@ -33,6 +33,7 @@ iFreeFlow 项目已经开源，大家可以直接调用 OneDrive 的“URL 上�
 微信通知推送：
 访问 URL 示例: http://mspa.koreacentral.cloudapp.azure.com:8080/api/wechat_notify?wechat_id=3be5931476f86adebd1e57f68b6ee7bb1133567420&title=免费推送微信信息&content=机械小鸽专业Power Automate玩家
 URL 发送 POST 请求，并返回响应 JSON。
+![最简单演示](guide.png)
 
 
 下面这些功能还在完善中，欢迎大家反馈更过功能需求！
