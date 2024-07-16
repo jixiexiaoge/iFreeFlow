@@ -24,6 +24,7 @@ iFreeFlow 项目已经开源，大家可以直接调用 OneDrive 的“URL 上�
   - `https://api.mspa.app/` (若连接失败请使用第一个)
 
 ## 使用示例
+![最简单演示](guide.png)
 ### 节假日查询
 ```plaintext
 http://mspa.koreacentral.cloudapp.azure.com:8080/api/holiday?date=2023-10-01
