@@ -1,0 +1,5 @@
+Flask
+chinese-calendar
+qrcode
+requests
+lunarcalendar
