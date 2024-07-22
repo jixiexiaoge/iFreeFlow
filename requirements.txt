@@ -1,5 +1,5 @@
-Flask
-chinese-calendar
-qrcode
-requests
-lunarcalendar
+Flask==2.1.1
+chinese-calendar==1.6.0
+qrcode==7.3
+requests==2.27.1
+waitress==2.0.0

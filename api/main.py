@@ -1,12 +1,26 @@
-from flask import Flask, request, jsonify, send_file, redirect, render_template_string
+from flask import Flask, request, jsonify, send_file, render_template_string
 import chinese_calendar as calendar
 import datetime
 import calendar as py_calendar
 import qrcode
 from io import BytesIO
 import requests
+import logging
+from logging.handlers import RotatingFileHandler
+import subprocess
 
 app = Flask(__name__)
+
+# 设置日志记录
+handler = RotatingFileHandler('log.txt', maxBytes=10000, backupCount=1)
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(message)s')
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
+
+@app.before_request
+def log_request_info():
+    app.logger.info(f"Requested URL: {request.url}, Method: {request.method}, IP: {request.remote_addr}, Params: {request.args}")
 
 @app.route('/api/holiday', methods=['GET'])
 def get_holiday_info():
@@ -16,13 +30,11 @@ def get_holiday_info():
     except ValueError:
         return jsonify({'error': 'Invalid date format. Please use YYYY-MM-DD.'}), 400
 
-    # 查询日期信息
     is_holiday = calendar.is_holiday(date)
     is_workday = calendar.is_workday(date)
     on_holiday, holiday_name = calendar.get_holiday_detail(date)
     is_in_lieu = calendar.is_in_lieu(date)
 
-    # 获取周数和星期
     week_number = date.isocalendar()[1]
     weekday_name = py_calendar.day_name[date.weekday()]
 
@@ -63,7 +75,6 @@ def generate_qrcode():
     if not text:
         return jsonify({'error': 'No text provided.'}), 400
 
-    # 生成二维码
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -74,15 +85,12 @@ def generate_qrcode():
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
 
-    # 创建文件名
     filename = f"{text}.png"
 
-    # 保存二维码图像到内存中的BytesIO对象
     buffer = BytesIO()
     img.save(buffer, format="PNG")
     buffer.seek(0)
 
-    # 发送文件响应，触发浏览器下载
     return send_file(buffer, mimetype='image/png', as_attachment=True, download_name=filename)
 
 @app.route('/api/wechat_notify', methods=['GET'])
@@ -107,6 +115,67 @@ def wechat_notify():
         return jsonify({'error': str(e)}), 500
 
     return jsonify(response_json)
+
+@app.route('/api/translate', methods=['GET'])
+def translate():
+    text = request.args.get('text')
+    if not text:
+        return jsonify({'error': 'No text provided.'}), 400
+    
+    try:
+        result = subprocess.run(['trans', '-b', ':en', text], capture_output=True, text=True)
+        translation = result.stdout.strip()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'original': text, 'translation': translation})
+
+def number_to_chinese_upper(num):
+    units = ["元", "角", "分"]
+    big_units = ["", "万", "亿"]
+    num_to_upper = {
+        '0': '零', '1': '壹', '2': '贰', '3': '叁', '4': '肆',
+        '5': '伍', '6': '陆', '7': '柒', '8': '捌', '9': '玖'
+    }
+
+    def four_digit_to_upper(four_digit):
+        result = ""
+        units = ["", "拾", "佰", "仟"]
+        for i, digit in enumerate(reversed(four_digit)):
+            if digit != '0':
+                result = num_to_upper[digit] + units[i] + result
+            elif result and not result.startswith("零"):
+                result = "零" + result
+        return result.rstrip('零') or '零'
+
+    def split_number(num):
+        int_part, _, dec_part = str(num).partition('.')
+        int_part = int_part[::-1]
+        groups = [int_part[i:i+4][::-1] for i in range(0, len(int_part), 4)]
+        dec_part = dec_part.ljust(2, '0')[:2]
+        return groups, dec_part
+
+    int_part, dec_part = split_number(num)
+    int_str = "".join(four_digit_to_upper(group) + big_units[i]
+                      for i, group in enumerate(int_part))
+    if int_str.endswith('零'):
+        int_str = int_str[:-1]
+    dec_str = "".join(num_to_upper[digit] + unit for digit, unit in zip(dec_part, units[1:]) if digit != '0')
+    if not dec_str:
+        dec_str = "整"
+    return int_str + units[0] + dec_str
+
+@app.route('/api/convert_amount', methods=['GET'])
+def convert_amount():
+    amount_str = request.args.get('amount')
+    try:
+        amount = float(amount_str)
+    except ValueError:
+        return jsonify({'error': 'Invalid amount format. Please provide a valid number.'}), 400
+    
+    chinese_upper = number_to_chinese_upper(amount)
+    
+    return jsonify({'amount': amount_str, 'chinese_upper': chinese_upper})
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -148,4 +217,5 @@ def page_not_found(e):
     return render_template_string(html), 404
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    from waitress import serve
+    serve(app, host='0.0.0.0', port=5000)
