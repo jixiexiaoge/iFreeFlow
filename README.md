@@ -16,10 +16,13 @@ iFreeFlow 项目已经开源，大家可以直接调用 OneDrive 的“URL 上�
 - **数据计算**: 计算一组数字的求和与平均数。
 - **二维码生成**: 生成字符串对应的二维码并下载。
 - **微信通知推送**: 通过 POST 请求发送微信通知。
+- - **英文翻译中文**: 通过 POST 请求发送微信通知。
+  - - **数字金额转大写**: 通过 POST 请求发送微信通知。
+  - **Word转PDF文档**: 通过 POST 请求发送微信通知。
 
 ## 接口文档
 - **接口地址**:
-  - `http://mspa.koreacentral.cloudapp.azure.com:8080/`
+  - `ifreeflow.eastasia.cloudapp.azure.com`
   - `http://20.41.84.42:8080/` (IP 地址可能不稳定)
   - `https://api.mspa.app/` (若连接失败请使用第一个)
 
