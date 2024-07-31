@@ -27,25 +27,25 @@ iFreeFlow 项目已经开源，大家可以直接调用 OneDrive 的“URL 上�
 ![最简单演示](guide.png)
 ### 节假日查询
 ```plaintext
-http://mspa.koreacentral.cloudapp.azure.com:8080/api/holiday?date=2023-10-01
+http://ifreeflow.koreacentral.cloudapp.azure.com:8080/api/holiday?date=2023-10-01
 ```
 返回日期信息，包含是否节假日、是否调休、周数和星期等。
 
 ### 数据计算
 ```plaintext
-http://mspa.koreacentral.cloudapp.azure.com:8080/api/sum_and_average?numbers=1,2,3,4,5
+http://ifreeflow.koreacentral.cloudapp.azure.com:8080/api/sum_and_average?numbers=1,2,3,4,5
 ```
 返回求和和平均数的计算结果。
 
 ### 二维码生成
 ```plaintext
-http://mspa.koreacentral.cloudapp.azure.com:8080/api/qrcode?text=HelloWorld
+http://ifreeflow.koreacentral.cloudapp.azure.com:8080/api/qrcode?text=HelloWorld
 ```
 浏览器自动下载名为 HelloWorld.png 的二维码图像文件。
 
 ### 微信通知推送
 ```plaintext
-http://mspa.koreacentral.cloudapp.azure.com:8080/api/wechat_notify?wechat_id=...&title=...&content=...
+http://ifreeflow.koreacentral.cloudapp.azure.com:8080/api/wechat_notify?wechat_id=...&title=...&content=...
 ```
 发送 POST 请求，返回响应 JSON。
 
