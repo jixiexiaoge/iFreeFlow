@@ -23,7 +23,7 @@ iFreeFlow 项目已经开源，大家可以直接调用 OneDrive 的“URL 上�
 ## 接口文档
 - **接口地址**:
   - `ifreeflow.eastasia.cloudapp.azure.com`
-  - `http://20.41.84.42:8080/` (IP 地址可能不稳定)
+  - `http://[20.41.84.42:8080/](http://20.39.200.13/)` (IP 地址可能不稳定)
   - `https://api.mspa.app/` (若连接失败请使用第一个)
 
 ## 使用示例
